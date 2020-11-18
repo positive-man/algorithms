@@ -130,7 +130,7 @@ class Game:
                 if self.get(loc) in BALLS:
                     self.__set(loc, EMPTY)
 
-    def run(self):
+    def run(self) -> int:
         """
         게임을 실행한다.
         :return: 빨간공을 구멍에 넣을 수 있는 최소 횟 수, 10회 이내에 성공할 수 없는 경우에는 -1
@@ -171,7 +171,7 @@ class Game:
 
         return success_min_count if success_min_count else -1
 
-    def get(self, loc: Location):
+    def get(self, loc: Location) -> str:
         """
         해당 로케이션에 무엇이 있는지 반환한다.
         """
@@ -199,7 +199,7 @@ class Game:
         """
         self.map[loc.y][loc.x] = c
 
-    def __find(self, target):
+    def __find(self, target) -> Location:
         """
         해당 문자를 찾는다.
         """
@@ -231,20 +231,20 @@ class Game:
         for ball in balls:
             ball.roll(dir_x, dir_y)
 
-    def __is_wall(self, loc: Location):
+    def __is_wall(self, loc: Location) -> bool:
         """
         해당 위치가 벽인지 확인한다.
         """
         return self.get(loc) == WALL
 
-    def _is_hole(self, loc):
+    def _is_hole(self, loc) -> bool:
         """
         해당 위치가 구멍인지 확인한다.
         """
         return self.get(loc) == HOLE
 
 
-def run(map_str: str):
+def run(map_str: str) -> int:
     """
     게임을 실행한다.
     :param map_str: 보드(지도) 정보
