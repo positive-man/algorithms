@@ -1,2 +1,2 @@
-# algorithms
-Let's solve a lot of algorithms
+# algorithm
+Let's solve algorithms.
