@@ -20,9 +20,11 @@ def __combine(paths):
     for path in paths:
         latest = path[-1]
         if latest[0]:
+            # 직전 시도에서 x-축으로 기울임. 다음번 시도는 y-축으로 기울임
             for d in [d for d in ALL_DIRECTIONS if d[0] == 0]:
                 result.append(path + [d])
         else:
+            # 직전 시도에서 y-축으로 기울임. 다음번 시도는 x-축으로 기울임
             for d in [d for d in ALL_DIRECTIONS if d[0] != 0]:
                 result.append(path + [d])
 
