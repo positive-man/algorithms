@@ -1,6 +1,8 @@
-import main
-import unittest
 import os
+import time
+import unittest
+
+import main
 
 testcases = {
     """5 5
@@ -68,9 +70,19 @@ class Tests(unittest.TestCase):
     def test(self):
         number = 1
         for tc in testcases.keys():
+            # 예상결과
             expected_result = testcases.get(tc)
+
+            # 시작 시간 기록
+            start_time = time.time()
+
+            # 실행
             actual_result = main.run(tc)
 
+            # 2초 이내에 완료되었는지 확인
+            assert time.time() - start_time < 2, r'The algorithm should be done in 2 seconds.'
+
+            # 예상 결과 및 실제 결과 비교
             assert expected_result == actual_result, \
                 os.linesep.join([
                     'The actual result is not equals with the expected result.',
@@ -78,4 +90,6 @@ class Tests(unittest.TestCase):
                     f'Actual: {str(actual_result)}'
                 ])
 
+            # 잘 동작했군 !!!
             print(f'{str(number)}. PASSED: {str(actual_result)}')
+            number += 1
