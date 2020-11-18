@@ -9,6 +9,31 @@ EMPTY = '.'
 
 ALL_DIRECTIONS = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
+ATTEMPT_LIMIT = 10
+
+
+def __combine(paths):
+    """
+    입력된 경로에 다음 이동시킬 위치를 조합하여 반환한다.
+    """
+    result = []
+    for path in paths:
+        latest = path[-1]
+        if latest[0]:
+            for d in [d for d in ALL_DIRECTIONS if d[0] == 0]:
+                result.append(path + [d])
+        else:
+            for d in [d for d in ALL_DIRECTIONS if d[0] != 0]:
+                result.append(path + [d])
+
+    return result
+
+
+# 경로 생성
+PATHS = [[direction] for direction in ALL_DIRECTIONS]
+for i in range(ATTEMPT_LIMIT - 1):
+    PATHS = __combine(PATHS)
+
 
 class Location:
 
@@ -19,6 +44,9 @@ class Location:
         self.prev_y = self.y
 
     def equals(self, x, y):
+        """
+        주어진 위치와 동일한지 비교하고, 동일하면 True, 그렇지 않으면 False 를 반환한다.
+        """
         return x == self.x and y == self.y
 
 
@@ -30,6 +58,9 @@ class Ball(Location):
         self.game = game
 
     def roll(self, dir_x, dir_y):
+        """
+        주어진 방향으로 공을 굴린다.
+        """
         while True:
             self.__move(dir_x, dir_y)
 
@@ -51,10 +82,17 @@ class Ball(Location):
                 raise RuntimeError('Not supported character: ' + self.game.get(self))
 
     def reset(self):
+        """
+        시작 위치로 되돌린다.
+        """
         self.x = self.__start_x
         self.y = self.__start_y
 
     def __move(self, x, y):
+        """
+        주어진 값만큼 위치를 이동시킨다.
+        """
+
         # 직전 위치 기억
         self.prev_x = self.x
         self.prev_y = self.y
@@ -64,6 +102,9 @@ class Ball(Location):
         self.y += y
 
     def __undo(self):
+        """
+        움직이기 이전 위치로 돌아간다.
+        """
         self.x = self.prev_x
         self.y = self.prev_y
 
@@ -93,14 +134,9 @@ class Game:
         :return: 빨간공을 구멍에 넣을 수 있는 최소 횟 수, 10회 이내에 성공할 수 없는 경우에는 -1
         """
 
-        # 경로를 생성합니다
-        paths = [[direction] for direction in ALL_DIRECTIONS]
-        for i in range(9):
-            paths = self.__combine(paths)
-
         # 성공한 경로 중 최소 시도 횟수
         success_min_count = None
-        for path in paths:
+        for path in PATHS:
             self.__reset()
             count = 0
 
@@ -165,7 +201,6 @@ class Game:
         """
         해당 문자를 찾는다.
         """
-
         for y in range(len(self.map)):
             for x in range(len(self.map[y])):
                 if target == self.map[y][x]:
@@ -193,23 +228,6 @@ class Game:
 
         for ball in balls:
             ball.roll(dir_x, dir_y)
-
-    @classmethod
-    def __combine(cls, paths):
-        """
-        입력된 경로에 다음 이동시킬 위치를 조합하여 반환한다.
-        """
-        result = []
-        for path in paths:
-            latest = path[-1]
-            if latest[0]:
-                for d in [d for d in ALL_DIRECTIONS if d[0] == 0]:
-                    result.append(path + [d])
-            else:
-                for d in [d for d in ALL_DIRECTIONS if d[0] != 0]:
-                    result.append(path + [d])
-
-        return result
 
     def __is_wall(self, loc: Location):
         """
