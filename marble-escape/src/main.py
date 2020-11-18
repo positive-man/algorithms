@@ -88,10 +88,15 @@ class Game:
                     self.__set(loc, EMPTY)
 
     def run(self):
+        """
+        게임을 실행한다.
+        :return: 빨간공을 구멍에 넣을 수 있는 최소 횟 수, 10회 이내에 성공할 수 없는 경우에는 -1
+        """
+
         # 경로를 생성합니다
-        paths = None
+        paths = [[direction] for direction in ALL_DIRECTIONS]
         for i in range(9):
-            paths = self.__combine([[direction] for direction in ALL_DIRECTIONS])
+            paths = self.__combine(paths)
 
         # 성공한 경로 중 최소 시도 횟수
         success_min_count = None
@@ -129,9 +134,15 @@ class Game:
         return success_min_count if success_min_count else -1
 
     def get(self, loc: Location):
+        """
+        해당 로케이션에 무엇이 있는지 반환한다.
+        """
         return self.map[loc.y][loc.x]
 
     def __print_map(self):
+        """
+        맵을 출력한다
+        """
         print()
         for y in range(len(self.map)):
             row = []
@@ -145,9 +156,16 @@ class Game:
             print(row)
 
     def __set(self, loc: Location, c):
+        """
+        위치에 문자 설정한다
+        """
         self.map[loc.y][loc.x] = c
 
     def __find(self, target):
+        """
+        해당 문자를 찾는다.
+        """
+
         for y in range(len(self.map)):
             for x in range(len(self.map[y])):
                 if target == self.map[y][x]:
@@ -157,10 +175,16 @@ class Game:
 
     # noinspection PyAttributeOutsideInit
     def __reset(self):
+        """
+        공들을 최초 위치에 놓는다.
+        """
         self.red_ball.reset()
         self.blu_ball.reset()
 
     def __tilt(self, dir_x, dir_y):
+        """
+        보드를 기울인다.
+        """
         balls = [self.red_ball, self.blu_ball]
         if dir_x:
             balls.sort(key=lambda b: b.x, reverse=dir_x > 0)
@@ -172,6 +196,9 @@ class Game:
 
     @classmethod
     def __combine(cls, paths):
+        """
+        입력된 경로에 다음 이동시킬 위치를 조합하여 반환한다.
+        """
         result = []
         for path in paths:
             latest = path[-1]
@@ -185,11 +212,22 @@ class Game:
         return result
 
     def __is_wall(self, loc: Location):
+        """
+        해당 위치가 벽인지 확인한다.
+        """
         return self.get(loc) == WALL
 
     def _is_hole(self, loc):
+        """
+        해당 위치가 구멍인지 확인한다.
+        """
         return self.get(loc) == HOLE
 
 
 def run(map_str: str):
+    """
+    게임을 실행한다.
+    :param map_str: 보드(지도) 정보
+    :return: 빨간공을 구멍에 넣을 수 있는 최소 횟 수, 10회 이내에 성공할 수 없는 경우에는 -1
+    """
     return Game(map_str).run()
