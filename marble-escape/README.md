@@ -126,6 +126,12 @@
 
 ----
 
+## Tests
+1. Install python 3.8
+1. Run command: `python -m unittest tests/test.py`
+
+----
+
 [저자의 생각]
 1. 보드를 이리저리 기울여본다.
     - 단, 최대 10번까지
