@@ -2,7 +2,7 @@ import os
 import time
 import unittest
 
-import main
+from main import Game
 
 testcases = {
     """5 5
@@ -69,15 +69,12 @@ testcases = {
 class Tests(unittest.TestCase):
     def test(self):
         number = 1
-        for tc in testcases.keys():
-            # 예상결과
-            expected_result = testcases.get(tc)
-
+        for test_data, expected_result in testcases.items():
             # 시작 시간 기록
             start_time = time.time()
 
             # 실행
-            actual_result = main.run(tc)
+            actual_result = Game(test_data).run()
 
             # 2초 이내에 완료되었는지 확인
             assert time.time() - start_time < 2, r'The algorithm should be done in 2 seconds.'

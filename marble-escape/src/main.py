@@ -73,13 +73,13 @@ class Ball(Location):
                 # 다른 공을 만나면, 멈춘다
                 self.__undo()
                 break
-            elif self.game.get(self) == EMPTY:
-                # 빈 공간이면, 계속 굴러간다
-                continue
             elif self.game.get(self) == WALL:
                 # 벽을 만나면, 멈춘다
                 self.__undo()
                 break
+            elif self.game.get(self) == EMPTY:
+                # 빈 공간이면, 계속 굴러간다
+                continue
             else:
                 raise RuntimeError('Not supported character: ' + self.game.get(self))
 
@@ -114,6 +114,9 @@ class Ball(Location):
 class Game:
 
     def __init__(self, map_str: str):
+        """
+        :param map_str: 보드(지도) 정보
+        """
         rows = map_str.split('\n')
         self.map = [[_ for _ in row] for row in rows[1:]]
 
@@ -133,7 +136,7 @@ class Game:
     def run(self) -> int:
         """
         게임을 실행한다.
-        :return: 빨간공을 구멍에 넣을 수 있는 최소 횟 수, 10회 이내에 성공할 수 없는 경우에는 -1
+        :return: 빨간공을 구멍에 넣을 수 있는 최소 횟 수를 반환한다. 10회 이내에 성공할 수 없는 경우에는 -1을 반환한다.
         """
 
         # 성공한 경로 중 최소 시도 횟수
@@ -160,9 +163,9 @@ class Game:
                     # 기울이기 전/후 공들의 위치가 동일하다면, 더이상 진행하지 않는다
                     break
 
-                if self._is_hole(self.red_ball):
+                if self.__is_hole(self.red_ball):
                     # 빨간공이 구멍에 들어갔다면,
-                    if self._is_hole(self.blu_ball):
+                    if self.__is_hole(self.blu_ball):
                         # 파란공도 구멍에 들어갔다면, 더 이상 진행하지 않는다
                         break
                     else:
@@ -186,9 +189,9 @@ class Game:
             row = []
             for x in range(len(self.map[y])):
                 if self.red_ball.equals(x, y):
-                    row.append(RED_BALL + HOLE if self._is_hole(Location(x, y)) else RED_BALL)
+                    row.append(RED_BALL + HOLE if self.__is_hole(Location(x, y)) else RED_BALL)
                 elif self.blu_ball.equals(x, y):
-                    row.append(BLUE_BALL + HOLE if self._is_hole(Location(x, y)) else BLUE_BALL)
+                    row.append(BLUE_BALL + HOLE if self.__is_hole(Location(x, y)) else BLUE_BALL)
                 else:
                     row.append(self.map[y][x])
             print(row)
@@ -237,17 +240,8 @@ class Game:
         """
         return self.get(loc) == WALL
 
-    def _is_hole(self, loc) -> bool:
+    def __is_hole(self, loc) -> bool:
         """
         해당 위치가 구멍인지 확인한다.
         """
         return self.get(loc) == HOLE
-
-
-def run(map_str: str) -> int:
-    """
-    게임을 실행한다.
-    :param map_str: 보드(지도) 정보
-    :return: 빨간공을 구멍에 넣을 수 있는 최소 횟 수, 10회 이내에 성공할 수 없는 경우에는 -1
-    """
-    return Game(map_str).run()
