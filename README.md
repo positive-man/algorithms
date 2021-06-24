@@ -1,2 +1,2 @@
 # algorithm
-Let's solve algorithms.
+알고리즘 공부
